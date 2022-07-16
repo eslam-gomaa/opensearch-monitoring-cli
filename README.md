@@ -14,14 +14,15 @@ The following functions are supported:
 
 # Installation
 
-> Install the Libraries
 
-```bash
-pip3 install -r requirements.txt
 ```
 
+```
 
-> After the installtion If see a similar WARNING
+---
+
+<br>
+
 
 ```bash
 WARNING: The script opmcli is installed in '/Users/YOU/Library/Python/3.8/bin' which is not on PATH.
@@ -35,7 +36,7 @@ alias opmcli="/Users/YOU/Library/Python/3.8/bin/opmcli"
 > It's prefered to put it in `.bashrc`
 
 
-> From source
+## Build from source (optional)
 
 ``` bash
 python setup.py sdist bdist_wheel
@@ -48,6 +49,27 @@ pip3 install dist/opmcli-0.0.1-py36-none-any.whl
 
 ```
 
+<br>
+
+---
+
+<br>
+
+# Authentication
+
+You need to provide the following Environment variables
+
+```bash
+export OPENSEARCH_ENDPOINT=
+export OPENSEARCH_PORT=443
+export OPENSEARCH_BASIC_AUTH=yes
+export OPENSEARCH_USERNAME=
+export OPENSEARCH_PASSWORD=
+```
+
+---
+
+<br>
 
 # Examples
 
