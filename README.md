@@ -24,7 +24,7 @@ pip install opmcli
 
 <br>
 
-
+If you see a similar warning:
 ```bash
 WARNING: The script opmcli is installed in '/Users/YOU/Library/Python/3.8/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
