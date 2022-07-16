@@ -35,9 +35,11 @@ class Cli():
             
         if (self.list) and (self.index) and not (self.display_shards):
             node_monitoring_.print_indices_table(self.index)
+            exit(0)
 
         if (self.list) and (self.index) and (self.display_shards):
             index_monitoring.print_shards_nodes_allocations(self.index)
+            exit(0)
 
         if (self.list and self.nodes):
             node_monitoring_.node_list_table(watch=self.watch, interval=Attributes.mointoring_interval)
@@ -50,14 +52,15 @@ class Cli():
 
         if  (self.top) and (self.node):
             node_monitoring_.node_monitor(self.node)
+            exit(0)
 
         if  (self.top) and (self.index):
             index_monitoring.index_monitor(index_pattern=self.index, primaries=self.primaries)
+            exit(0)
 
         # Print help if no args are provided.
-        if len(sys.argv) <= 1:
-            self.parser.print_help()
-            exit(0)
+        self.parser.print_help()
+        exit(0)
 
     
     def read_env(self):
