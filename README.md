@@ -14,9 +14,10 @@ The following functions are supported:
 
 # Installation
 
+[pypi.org](https://pypi.org/project/opmcli)
 
 ```
-
+pip install opmcli
 ```
 
 ---
@@ -29,14 +30,17 @@ WARNING: The script opmcli is installed in '/Users/YOU/Library/Python/3.8/bin' w
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 ```
 
-You need to create an alias
+You need to create an alias ( _Prefered to put it in `.bashrc`_ )
 ```
 alias opmcli="/Users/YOU/Library/Python/3.8/bin/opmcli"
 ```
-> It's prefered to put it in `.bashrc`
 
 
-## Build from source (optional)
+<details>
+    <summary>
+        <b style="font-size:17px"> <code>Build from source</code></b> [ optional ]
+    </summary>
+    <br>
 
 ``` bash
 python setup.py sdist bdist_wheel
@@ -44,12 +48,14 @@ python setup.py sdist bdist_wheel
 mv dist/opmcli-0.0.1-py2-none-any.whl dist/opmcli-0.0.1-py36-none-any.whl
 
 pip3 install dist/opmcli-0.0.1-py36-none-any.whl
-
-# pip3 install -e .
-
 ```
 
+<br>  
+</details>
+
 <br>
+
+
 
 ---
 
