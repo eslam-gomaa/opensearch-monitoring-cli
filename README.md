@@ -87,7 +87,7 @@ export OPENSEARCH_PASSWORD=
 List Indices (with shards details)
 
 ```
-python3 opmcli.py --list --index INDEX_PATTERN
+opmcli --list --index INDEX_PATTERN
 ```
 
 <br>
@@ -95,7 +95,7 @@ python3 opmcli.py --list --index INDEX_PATTERN
 List Nodes
 
 ```
-python3 opmcli.py  --list --nodes
+opmcli --list --nodes
 ```
 
 <br>
@@ -103,7 +103,7 @@ python3 opmcli.py  --list --nodes
 Live monitoring for a Node
 
 ```
-python3 opmcli.py --top --node NODE_ID
+opmcli --top --node NODE_ID
 ```
 
 <br>
@@ -111,7 +111,7 @@ python3 opmcli.py --top --node NODE_ID
 Live monitoring for an Index / Indices
 
 ```
-python3 opmcli.py --top --index INDEX_PATTERN
+opmcli --top --index INDEX_PATTERN
 ```
 
 
@@ -120,5 +120,5 @@ python3 opmcli.py --top --index INDEX_PATTERN
 Print shards allocation across the nodes
 
 ```
-python3 opmcli.py --list --index INDEX_PATTERN --display-shards
+opmcli --list --index INDEX_PATTERN --display-shards
 ```
