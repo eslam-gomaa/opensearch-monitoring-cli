@@ -35,6 +35,7 @@ You need to create an alias ( _Prefered to put it in `.bashrc`_ )
 alias opmcli="/Users/YOU/Library/Python/3.8/bin/opmcli"
 ```
 
+<br>
 
 <details>
     <summary>
