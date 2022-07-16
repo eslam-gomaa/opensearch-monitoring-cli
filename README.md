@@ -33,6 +33,9 @@ WARNING: The script opmcli is installed in '/Users/YOU/Library/Python/3.8/bin' w
 ```
 
 You need to create an alias ( _Prefered to put it in `.bashrc`_ )
+
+_Example:_
+
 ```
 alias opmcli="/Users/YOU/Library/Python/3.8/bin/opmcli"
 ```
