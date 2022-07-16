@@ -60,8 +60,6 @@ class Cli():
 
         # Print help if no args are provided.
         self.parser.print_help()
-        exit(0)
-
     
     def read_env(self):
         """
