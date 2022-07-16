@@ -21,6 +21,20 @@ pip3 install -r requirements.txt
 ```
 
 
+> After the installtion If see a similar WARNING
+
+```bash
+WARNING: The script opmcli is installed in '/Users/YOU/Library/Python/3.8/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+```
+
+You need to create an alias
+```
+alias opmcli="/Users/YOU/Library/Python/3.8/bin/opmcli"
+```
+> It's prefered to put it in `.bashrc`
+
+
 > From source
 
 ``` bash
