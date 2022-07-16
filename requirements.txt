@@ -1,0 +1,4 @@
+tabulate
+rich
+opensearch-py
+argparse
