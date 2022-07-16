@@ -16,8 +16,6 @@ The following functions are supported:
 
 > At least Python 3.6 is needed
 
-[pypi.org](https://pypi.org/project/opmcli)
-
 ```
 pip install opmcli
 ```
