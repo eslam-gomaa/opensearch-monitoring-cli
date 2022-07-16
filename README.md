@@ -14,6 +14,8 @@ The following functions are supported:
 
 # Installation
 
+> At least Python 3.6 is needed
+
 [pypi.org](https://pypi.org/project/opmcli)
 
 ```
