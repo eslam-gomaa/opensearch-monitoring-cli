@@ -291,7 +291,20 @@ class Node_Monitoring(Opensearch_Python):
                 self.progress_start()
 
             def progress_start(self):
-                node_json = self.node_stats().get('nodes').get(node_id)
+                nodes_json = self.node_stats().get('nodes')
+                node_json = nodes_json.get(node_id)
+
+                # Fail if the Node ID not found
+                nodes_ids = []
+                for id in nodes_json.keys():
+                    nodes_ids.append(id)
+
+                if node_id not in nodes_ids:
+                    rich_print(f"[bold yellow]ERROR -- wrong Node ID: [underline]{node_id}[/underline]\n")
+                    rich_print(f"[bold yellow]Available Nodes:\n")
+                    self.node_list_table()
+                    print()
+                    exit(1)
 
                 self.progress_swap_total = Progress(
                     TextColumn("[progress.description]{task.description}"),

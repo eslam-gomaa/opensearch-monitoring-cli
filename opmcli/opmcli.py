@@ -46,7 +46,7 @@ class Cli():
             exit(0)
 
         if  (self.top) and (self.index) and (self.node):
-            rich_print("[blink bold yellow]ERROR -- cant NOT top [underline]Indices[/underline] & [underline]Nodes[/underline] together\n")
+            rich_print("[bold yellow]ERROR -- cant NOT top [underline]Indices[/underline] & [underline]Nodes[/underline] together\n")
             self.parser.print_help()
             exit(1)
 
