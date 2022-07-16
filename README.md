@@ -120,5 +120,5 @@ python3 opmcli.py --top --index INDEX_PATTERN
 Print shards allocation across the nodes
 
 ```
-python3 opmcli.py --list --index fcdr-2022-* --display-shards
+python3 opmcli.py --list --index INDEX_PATTERN --display-shards
 ```
