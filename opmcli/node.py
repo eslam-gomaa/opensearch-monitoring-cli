@@ -34,6 +34,7 @@ class Node_Monitoring(Opensearch_Python):
 
     def print_calculate_indexing_rate(self, index, seconds=60, times=3, interval=3):
         """
+        [ DEPRECATED -> To be deleted ]
         Calculates the indexing & searching rates pe N seconds (print a table)
         - INPUT:
             1. Index: (not a pattern, name of a specific index)
