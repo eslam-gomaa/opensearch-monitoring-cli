@@ -2,6 +2,7 @@ from opensearchpy import OpenSearch
 import opensearchpy
 import urllib3
 from opmcli.attributes import Attributes
+from rich import print as rich_print
 
 
 
@@ -36,7 +37,7 @@ class Opensearch_Python():
                                                 ssl_assert_hostname = False,
                                                 ssl_show_warn = False)
                 if Attributes.debug:
-                    print("INFO -- Connected to openSearch.\n")
+                    rich_print("[bold green]INFO --[/bold green] [green]Connected to openSearch.\n")
             except (opensearchpy.exceptions.ConnectionError,
                     urllib3.exceptions.NewConnectionError,
                     opensearchpy.exceptions.AuthenticationException,
@@ -108,7 +109,8 @@ class Opensearch_Python():
                 opensearchpy.exceptions.ConnectionError,
                 opensearchpy.exceptions.AuthenticationException,
                 opensearchpy.exceptions.AuthorizationException) as e:
-            raise SystemExit(f"ERROR -- (get_index_settings) Index Not found\n> {e}")
+            rich_print(f"[bold]ERROR -- (get_index_settings) Index Not found[/bold]\n> [white]{e}")
+            exit(1)
 
     def node_stats(self, node_id=None, metric=None, index_metric=None, params=None, headers=None):
         """
@@ -122,11 +124,11 @@ class Opensearch_Python():
         except (KeyboardInterrupt, SystemExit):
             exit(1)
         except (opensearchpy.exceptions.AuthorizationException) as e:
-            print(f"ERROR -- Authorization Error while getting node stats\n> {e}")
+            rich_print(f"[bold]ERROR -- Authorization Error while getting Node stats[/bold]\n> [white]{e}")
             exit(1)
         except (opensearchpy.exceptions.ConnectionError,
                 opensearchpy.exceptions.ConnectionTimeout) as e:
-                print(f"ERROR -- Connection Error out while getting node stats\n> {e}")
+                rich_print(f"[bold]ERROR -- Connection Error while getting Node stats[/bold]\n> [white]{e}")
                 exit(1)            
 
     
