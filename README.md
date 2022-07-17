@@ -5,8 +5,8 @@ A CLI tool that provides the data we need for optimizing opensearch performance
 <br>
 
 The following functions are supported:
-- List Nodes
-- Live monitoring for Nodes
+- [List Nodes](#list-nodes)
+- [Live monitoring for Nodes](#node-top)
 - List Indices
 - live monitoring for Indices
 - show shards allocation on the nodes (for a giving Index pattern)
@@ -17,7 +17,7 @@ The following functions are supported:
 > At least Python 3.6 is needed
 
 ```
-pip install opmcli
+pip3 install opmcli
 ```
 
 ---
@@ -92,7 +92,9 @@ opmcli --list --index INDEX_PATTERN
 
 <br>
 
-List Nodes
+#### List Nodes
+<a id=list-nodes></a>
+
 
 ```
 opmcli --list --nodes
@@ -100,11 +102,34 @@ opmcli --list --nodes
 
 <br>
 
-Live monitoring for a Node
+#### Live monitoring for a Node
+<a id=node-top></a>
 
 ```
 opmcli --top --node NODE_ID
 ```
+
+**Monitored Metrics:**
+- [x] cpu
+- [x] memory
+- [x] swap
+- [x] fs
+- [x] File_descriptors
+- [x] Disk IO
+- [x] JVM
+- [x] Indexing Rate
+- [x] Indexing Latency
+- [x] Searching Rate
+- [x] Searching Latency
+- [x] Fetch Rate
+- [x] Fetch Latency
+- [ ] Refresh Rate
+- [ ] Refresh Latency
+- [ ] Field data
+- [ ] Threads
+
+
+
 
 <br>
 

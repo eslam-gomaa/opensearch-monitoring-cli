@@ -8,7 +8,7 @@ if os.path.isfile(requirements):
 
 setup(
     name = 'opmcli',
-    version = '0.0.2',
+    version = '0.0.3',
     author = 'Eslam Gomaa',
     # license = '<the license you chose>',
     description = 'A CLI tool for opensearch performance monitoring',
