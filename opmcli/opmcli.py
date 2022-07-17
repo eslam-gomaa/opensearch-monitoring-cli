@@ -60,6 +60,7 @@ class Cli():
 
         # Print help if no args are provided.
         self.parser.print_help()
+        exit(0)
     
     def read_env(self):
         """
@@ -103,7 +104,7 @@ class Cli():
         
 
     def argparse(self):
-        parser = argparse.ArgumentParser(description='A Python tool to list Elasticserach indices & calculate indexing & searching rates')
+        parser = argparse.ArgumentParser(description='A Python tool for openSearch live monitoring for Nodes and Indices')
         parser.add_argument('-i', '--index', type=str, required=False, metavar='', help='The Index name / pattern')
         parser.add_argument('-l', '--list', action='store_true', help='List index / indices')
         parser.add_argument('-I', '--interval', type=int, required=False, metavar='', help='Interval (seconds) to wait between rates calculations; default: 3')

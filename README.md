@@ -121,7 +121,7 @@ opmcli --list --nodes
 opmcli --top --node NODE_ID
 ```
 
-**Monitored Metrics:**
+- Monitored Metrics:
 - [x] cpu
 - [x] memory
 - [x] swap
@@ -154,7 +154,7 @@ opmcli --top --node NODE_ID
 opmcli --top --index INDEX_PATTERN
 ```
 
-**Monitored Metrics:**
+- Monitored Metrics:
 - [x] Store size
 - [x] documents count
 - [x] Indexing Rate
