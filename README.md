@@ -7,9 +7,9 @@ A CLI tool that provides the data we need for optimizing opensearch performance
 The following functions are supported:
 - [List Nodes](#list-nodes)
 - [Live monitoring for Nodes](#node-top)
-- List Indices
-- live monitoring for Indices
-- show shards allocation on the nodes (for a giving Index pattern)
+- [List Indices](#list-indices)
+- [live monitoring for Indices](#top-index)
+- [show shards allocation over the nodes](#shards-allocation) (for a giving Index pattern)
 
 
 # Installation
@@ -77,6 +77,15 @@ export OPENSEARCH_USERNAME=
 export OPENSEARCH_PASSWORD=
 ```
 
+| ENV                       | Required | Default value |
+| --------------------------- | ---------- | --------------- |
+| `OPENSEARCH_ENDPOINT`   | YES      |               |
+| `OPENSEARCH_PORT`       | YES      | 443           |
+| `OPENSEARCH_BASIC_AUTH` | NO       | no            |
+| `OPENSEARCH_USERNAME`   | NO       |               |
+| `OPENSEARCH_PASSWORD`   | NO       |               |
+
+
 ---
 
 <br>
@@ -85,6 +94,8 @@ export OPENSEARCH_PASSWORD=
 
 
 List Indices (with shards details)
+<a id=list-indices></a>
+
 
 ```
 opmcli --list --index INDEX_PATTERN
@@ -104,6 +115,7 @@ opmcli --list --nodes
 
 #### Live monitoring for a Node
 <a id=node-top></a>
+
 
 ```
 opmcli --top --node NODE_ID
@@ -128,21 +140,41 @@ opmcli --top --node NODE_ID
 - [ ] Field data
 - [ ] Threads
 
+> More to be added upon need
 
 
 
 <br>
 
 Live monitoring for an Index / Indices
+<a id=top-index></a>
+
 
 ```
 opmcli --top --index INDEX_PATTERN
 ```
 
+**Monitored Metrics:**
+- [x] Store size
+- [x] documents count
+- [x] Indexing Rate
+- [x] Indexing Latency
+- [x] Searching Rate
+- [x] Searching Latency
+- [x] Fetch Rate
+- [x] Fetch Latency
+- [x] Refresh Rate
+- [x] Refresh Latency
+- [ ] Field data
+
+> More to be added upon need
+
 
 <br>
 
 Print shards allocation across the nodes
+<a id=shards-allocation></a>
+
 
 ```
 opmcli --list --index INDEX_PATTERN --display-shards
