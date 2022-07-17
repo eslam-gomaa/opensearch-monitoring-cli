@@ -93,7 +93,7 @@ export OPENSEARCH_PASSWORD=
 # Examples
 
 
-List Indices (with shards details)
+#### List Indices (with shards details)
 <a id=list-indices></a>
 
 
@@ -146,7 +146,7 @@ opmcli --top --node NODE_ID
 
 <br>
 
-Live monitoring for an Index / Indices
+#### Live monitoring for an Index / Indices
 <a id=top-index></a>
 
 
@@ -172,7 +172,7 @@ opmcli --top --index INDEX_PATTERN
 
 <br>
 
-Print shards allocation across the nodes
+#### Print shards allocation across the nodes
 <a id=shards-allocation></a>
 
 

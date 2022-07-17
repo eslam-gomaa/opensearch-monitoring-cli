@@ -153,7 +153,11 @@ class Index_Monitoring(Opensearch_Python):
             def progress_start(self, rate_update_interval=Attributes.rate_update_interval):
 
                 # Test API call,  will raise exception if NOT able to authenticate.
-                index_json = self.get_index_stats(index_pattern).get('_all').get(self.total_or_primaries)
+                index_json = self.get_index_stats(index_pattern)
+                n_of_indices = len(index_json.get('indices').keys())
+                if n_of_indices == 0:
+                    rich_print(f"[bold green]INFO -- No Indices found with the index pattern: [underline]{index_pattern}[/underline]\n")
+                    exit(1)
 
                 # Progress for updating Rates bar
                 self.progress = Progress(
