@@ -80,7 +80,7 @@ export OPENSEARCH_PASSWORD=
 | ENV                       | Required | Default value |
 | --------------------------- | ---------- | --------------- |
 | `OPENSEARCH_ENDPOINT`   | YES      |               |
-| `OPENSEARCH_PORT`       | YES      | 443           |
+| `OPENSEARCH_PORT`       | NO      | 443           |
 | `OPENSEARCH_BASIC_AUTH` | NO       | no            |
 | `OPENSEARCH_USERNAME`   | NO       |               |
 | `OPENSEARCH_PASSWORD`   | NO       |               |
