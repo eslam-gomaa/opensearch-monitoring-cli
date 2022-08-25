@@ -25,6 +25,7 @@ class Cli():
         self.nodes = False
         self.watch = False
         self.display_shards = False
+        self.indices_patterns = None
 
         Attributes.monitoring_interval_seconds = 30
 
@@ -56,6 +57,10 @@ class Cli():
 
         if  (self.top) and (self.index):
             index_monitoring.index_monitor(index_pattern=self.index, primaries=self.primaries)
+            exit(0)
+
+        if (self.list and self.indices_patterns):
+            index_monitoring.print_indices_patterns_table(self.indices_patterns)
             exit(0)
 
         # Print help if no args are provided.
@@ -114,6 +119,7 @@ class Cli():
         parser.add_argument('-w', '--watch', action='store_true', help='show live results')
         parser.add_argument('-p', '--prim', action='store_true', help='Monitor only Primary shards (for --top --index)')
         parser.add_argument('-d', '--display-shards', action='store_true', help='display shards allocation on Nodes (for --list --index)')
+        parser.add_argument('-P', '--patterns', nargs='+', help='display Indices patterns information, takes a List of patterns')
 
 
 
@@ -150,6 +156,8 @@ class Cli():
         if results.display_shards:
             self.display_shards = results.display_shards
 
+        if results.patterns:
+            self.indices_patterns = results.patterns
 
     
 cli = Cli()

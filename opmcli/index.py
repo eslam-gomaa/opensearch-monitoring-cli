@@ -952,5 +952,15 @@ class Index_Monitoring(Opensearch_Python):
         except (KeyboardInterrupt):
             exit(0)
 
+    
+    def print_indices_patterns_table(self, patterns_list):
+        """
+        Print a strutured table with each index pattern information
+        INPUT:
+            - Indices_patterns (list)
+        """
+        print(patterns_list)
+        
+
 
 
