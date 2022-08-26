@@ -965,27 +965,6 @@ class Index_Monitoring(Opensearch_Python):
             exit(0)
 
 
-    # def find_index_template(self, pattern, template_version=2):
-    #     found = []
-    #     index_templates_list = self.get_index_template("*",  template_version=template_version)
-
-    #     if template_version == 2:
-    #         index_templates_list = index_templates_list.get('index_templates')
-    #         for template in index_templates_list:
-    #             if pattern in template.get("index_template").get("index_patterns"):
-    #                 found.append(template.get("name"))
-    #                 # For now => break if 1 template found
-    #                 break
-
-    #     if template_version == 1:
-    #         for template_name, value in index_templates_list.items():
-    #             if pattern in value.get("index_patterns"):
-    #                 found.append(template_name)
-    #                 # For now => break if 1 template found
-    #                 break
-    #     return found
-
-
     def print_indices_patterns_table(self, patterns_list, template_version=2):
         """
         Print a strutured table with each index pattern information
