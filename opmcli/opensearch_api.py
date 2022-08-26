@@ -1,9 +1,16 @@
+import re
 from opensearchpy import OpenSearch
 import opensearchpy
 import urllib3
 from opmcli.attributes import Attributes
 from rich import print as rich_print
-
+import requests
+import json
+from urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+# https://stackoverflow.com/a/41041028
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+import socket
 
 
 class Opensearch_Python():
@@ -81,7 +88,7 @@ class Opensearch_Python():
             raise SystemExit(f"ERROR -- (get_index) Unable to get index\n> {e}")
     
 
-    def get_index_stats(self, index):
+    def get_index_stats(self, index, exit_on_fail=True):
         """
         Returns the index Stats (Json)
         """
@@ -94,7 +101,10 @@ class Opensearch_Python():
                 opensearchpy.exceptions.ConnectionError,
                 opensearchpy.exceptions.AuthenticationException,
                 opensearchpy.exceptions.AuthorizationException) as e:
-            raise SystemExit(f"ERROR -- (get_index_stats) Unable to get index stats\n> {e}")
+            if exit_on_fail:
+                raise SystemExit(f"ERROR -- (get_index_stats) Unable to get index stats\n> {e}")
+            else:
+                raise KeyError("index not found")
 
     def get_index_settings(self, index):
         """
@@ -161,4 +171,57 @@ class Opensearch_Python():
         search_shards = Opensearch_Python.es_client.search_shards(index)
         return search_shards
 
+    def get_index_template(self, index_pattern, template_version):
+        if Opensearch_Python.es_client is None:
+            self.authenticate()
+
+        if template_version not in [1, 2]:
+            print("ERROR -- unknown Inde template version !, only support v1 and v2(composable template)")
+            exit(1)
+
+        if template_version == 2:
+            index_templates_json = Opensearch_Python.es_client.indices.get_index_template(index_pattern)
+        else:
+            index_templates_json = Opensearch_Python.es_client.indices.get_template(index_pattern)
+
+        return index_templates_json
         
+    def get_ism_policy(self, index_pattern):
+        # _opendistro/_ism/explain/index-*
+        # https://opendistro.github.io/for-elasticsearch-docs/docs/im/ism/api/#explain-index
+
+        # _plugins/_ism/explain/index-*
+        # https://opensearch.org/docs/latest/im-plugin/ism/api/#explain-index
+
+        session = requests.Session()
+        session.verify = Attributes.env_opensearch_verify_certs
+
+        session.auth = (Attributes.env_opensearch_username, Attributes.env_opensearch_password)
+
+        # Authenticate
+        try:
+            url = f"https://{Attributes.env_opensearch_endpoint}:{Attributes.env_opensearch_port}"
+            url_path = url + "/" + f"_opendistro/_ism/explain/{index_pattern}"
+            req = session.get(url_path)
+        except (urllib3.exceptions.ReadTimeoutError, socket.timeout) as e:
+            print(f"ERROR -- Failed rest api: {url_path}, Timeout\n{e}")
+            exit(1)
+
+        if req.status_code == 200:
+            index_templates_json = json.loads(req.text)
+        elif req.status_code == 400:
+            return None
+        else:
+            print(f"ERROR -- Failed rest api: {url_path}, status_code: {req.status_code}")
+            rich_print(req.text)
+            exit(1)
+
+        if req.status_code == 200:
+            first_item = list(index_templates_json)[0]
+            first_item_dct = index_templates_json[first_item]
+            # print(first_item_dct.keys())
+            if 'policy_id' in first_item_dct.keys():
+                return first_item_dct
+            else:
+                return {}
+
