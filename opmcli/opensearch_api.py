@@ -203,7 +203,15 @@ class Opensearch_Python():
             url = f"https://{Attributes.env_opensearch_endpoint}:{Attributes.env_opensearch_port}"
             url_path = url + "/" + f"_opendistro/_ism/explain/{index_pattern}"
             req = session.get(url_path)
-        except (urllib3.exceptions.ReadTimeoutError, socket.timeout) as e:
+        except (urllib3.exceptions.ReadTimeoutError, 
+                socket.timeout,
+                requests.exceptions.SSLError,
+                urllib3.exceptions.MaxRetryError,
+                requests.exceptions.ConnectionError,
+                urllib3.exceptions.ProtocolError,
+                ConnectionResetError,
+                # ssl.SSLEOFError,
+                ) as e:
             print(f"ERROR -- Failed rest api: {url_path}, Timeout\n{e}")
             exit(1)
 

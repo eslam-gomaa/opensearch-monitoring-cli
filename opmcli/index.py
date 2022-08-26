@@ -13,6 +13,8 @@ from rich.layout import Layout
 from rich.console import Console, Group
 from rich.rule import Rule
 from rich import print as rich_print
+from rich.markdown import Markdown
+import pyperclip
 
 from opmcli.opensearch_api import Opensearch_Python
 from opmcli.attributes import Attributes
@@ -1005,7 +1007,7 @@ class Index_Monitoring(Opensearch_Python):
                     total=len(patterns_list),
                     )
 
-            table = [['Index pattern', "Indices number", "shards number", 'size total', "size P", f"Index Templates (v{template_version})", "ISM Policy", "Comment"]]
+            table = [['**Index pattern**', "**Indices number**", "**shards number**", '**size total**', "**size P**", f"**ndex Templates** (v{template_version})", "**ISM Policy**", "**Comment**"]]
 
             with Live(self.progress_shards_list, auto_refresh=True, screen=False):
                 cnt = 1
@@ -1028,7 +1030,7 @@ class Index_Monitoring(Opensearch_Python):
                             shards_number_total =""
                             size_total = ""
                             size_p = ""
-                            comment = "Index not found"
+                            comment = "❗ **INDEX NOT FOUND**"
                             
                     except KeyError:
                         pattern_stats = {}
@@ -1036,23 +1038,23 @@ class Index_Monitoring(Opensearch_Python):
                         shards_number_total =""
                         size_total = ""
                         size_p = ""
-                        comment = "Index not found"
+                        comment = "❗ **INDEX NOT FOUND**"
 
                     matching_templates = find_index_template(pattern)
                     if len(matching_templates) > 0:
-                        index_templates = ', '.join(matching_templates)
+                        index_templates = f"`{''.join(matching_templates)}`"
                     else:
                         index_templates = " "
 
-                    ism_policy = self.bcolors.WARNING + "not enabled" + self.bcolors.ENDC
+                    ism_policy = "🔍 **NOT ENABLED**"
                     if self.get_ism_policy(pattern) is None:
-                        ism_policy = self.bcolors.OKBLUE + "not found" + self.bcolors.ENDC
+                        ism_policy = "❗ **NOT FOUND**"
                     elif self.get_ism_policy(pattern):
-                        ism_policy = self.get_ism_policy(pattern).get('policy_id')
+                        ism_policy = f"`{self.get_ism_policy(pattern).get('policy_id')}`"
 
                     row = [
                         # Index pattern
-                        pattern,
+                        f"`{pattern}`",
                         # Indices number
                         indices_number,
                         # shards number total
@@ -1070,12 +1072,18 @@ class Index_Monitoring(Opensearch_Python):
 
                     table.append(row)
                     cnt+=1
-            out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
-            print(out)
+            out = tabulate(table, headers='firstrow', tablefmt='github')
+            # rich_print(Markdown(out))
+            print(f"\n{out}\n")
+            pyperclip.copy(out)
+            rich_print("\n[green]INFO -- Table is copied to clipboard")
         except KeyboardInterrupt:
             print()
             rich_print("[green]OK!")
             exit(0)
+        except (opensearchpy.exceptions.AuthorizationException,
+                opensearchpy.exceptions.ConnectionTimeout) as e:
+            raise SystemExit(f"ERROR -- (print_indices_patterns_table) connection failed with openSearch\n> {e}")
 
         
 
