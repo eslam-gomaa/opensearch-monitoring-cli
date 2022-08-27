@@ -81,7 +81,7 @@ export OPENSEARCH_PASSWORD=
 | ENV                       | Required | Default value |
 | --------------------------- | ---------- | --------------- |
 | `OPENSEARCH_ENDPOINT`   | YES      |               |
-| `OPENSEARCH_PORT`       | NO      | 443           |
+| `OPENSEARCH_PORT`       | NO       | 443           |
 | `OPENSEARCH_BASIC_AUTH` | NO       | no            |
 | `OPENSEARCH_USERNAME`   | NO       |               |
 | `OPENSEARCH_PASSWORD`   | NO       |               |
@@ -94,7 +94,7 @@ export OPENSEARCH_PASSWORD=
 # Examples
 
 
-#### List Indices (with shards details)
+### List Indices (with shards details)
 <a id=list-indices></a>
 
 
@@ -104,7 +104,7 @@ opmcli --list --index INDEX_PATTERN
 
 <br>
 
-#### List Nodes
+### List Nodes
 <a id=list-nodes></a>
 
 
@@ -114,7 +114,7 @@ opmcli --list --nodes
 
 <br>
 
-#### Live monitoring for a Node
+### Live monitoring for a Node
 <a id=node-top></a>
 
 
@@ -147,7 +147,7 @@ opmcli --top --node NODE_ID
 
 <br>
 
-#### Live monitoring for an Index / Indices
+### Live monitoring for an Index / Indices
 <a id=top-index></a>
 
 
@@ -173,7 +173,7 @@ opmcli --top --index INDEX_PATTERN
 
 <br>
 
-#### Print shards allocation across the nodes
+### Print shards allocation across the nodes
 <a id=shards-allocation></a>
 
 
@@ -183,7 +183,7 @@ opmcli --list --index INDEX_PATTERN --display-shards
 
 <br>
 
-#### generate **Markdown table** for indices patters
+### Generate **Markdown table** for indices patters
 <a id=indices-patterns></a>
 
 Generates a markdown table with helpful information for each index pattern (compatible with [Jira confluence](https://www.atlassian.com/software/confluence))
