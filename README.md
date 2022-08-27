@@ -181,18 +181,24 @@ opmcli --top --index INDEX_PATTERN
 opmcli --list --index INDEX_PATTERN --display-shards
 ```
 
-More CLI options for `--display-shards`
-- `--template-version`
-  - which index template version to discover (supports 1 and 2(composable index templates))
-  - default is 2
-- `--sort-by`
-  - sort the table by `size`, `indices` or `shards`
-  - default, no sorting
+<br>
 
 #### generate **Markdown table** for indices patters
 <a id=indices-patterns></a>
 
 Generates a markdown table with helpful information for each index pattern (compatible with [Jira confluence](https://www.atlassian.com/software/confluence))
+
+
+CLI options for `--display-shards`
+
+| argument             | description                                                  | options                     | default |
+| -------------------- | ------------------------------------------------------------ | --------------------------- | ------- |
+| `--template-version` | which index template version to discover (supports 1 and 2(composable index templates)) | `1`, `2`                    | 2       |
+| `sort-by`            | sort the table indices patterns by `size`, `indices` or `shards` | `size`, `indices`, `shards` |         |
+
+
+<br>
+<br>
 
 **Example output**
 
