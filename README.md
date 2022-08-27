@@ -1,4 +1,4 @@
-# opcli
+# opmcli
 
 A CLI tool that provides the data we need for optimizing opensearch performance
 
