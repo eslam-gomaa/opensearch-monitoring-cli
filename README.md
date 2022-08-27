@@ -10,6 +10,7 @@ The following functions are supported:
 - [List Indices](#list-indices)
 - [live monitoring for Indices](#top-index)
 - [show shards allocation over the nodes](#shards-allocation) (for a giving Index pattern)
+- [generate **Markdown table** for indices patters](#indices-patterns) 🎉 **NEW**
 
 
 # Installation
@@ -17,7 +18,7 @@ The following functions are supported:
 > At least Python 3.6 is needed
 
 ```
-pip3 install opmcli
+pip3 install opmcli --upgrade
 ```
 
 ---
@@ -176,6 +177,33 @@ opmcli --top --index INDEX_PATTERN
 <a id=shards-allocation></a>
 
 
-```
+```bash
 opmcli --list --index INDEX_PATTERN --display-shards
 ```
+
+More CLI options for `--display-shards`
+- `--template-version`
+  - which index template version to discover (supports 1 and 2(composable index templates))
+  - default is 2
+- `--sort-by`
+  - sort the table by `size`, `indices` or `shards`
+  - default, no sorting
+
+#### generate **Markdown table** for indices patters
+<a id=indices-patterns></a>
+
+Generates a markdown table with helpful information for each index pattern (compatible with [Jira confluence](https://www.atlassian.com/software/confluence))
+
+**Example output**
+
+| **Index pattern** | **Indices number** | **Shards number** | **Size total** | **Size P** | **Index Templates** (v2) | **ISM Policy**    | **Comment** |
+| ----------------- | ------------------ | ----------------- | -------------- | ---------- | ------------------------ | ----------------- | ----------- |
+| `test1-*`         | 67                 | 604               | 4.05 tb        | 2.03 tb    | `*******`                | `*******`         |             |
+| `test2-*`         | 76                 | 216               | 1.45 tb        | 742.38 gb  | `*******`                | `*******`         |             |
+| `test3*`          | 9                  | 18                | 186.49 mb      | 93.35 mb   | `*******`                | 🔍 **NOT ENABLED** |             |
+|                   |                    |                   |                |            |                          |                   |             |
+
+
+
+
+
