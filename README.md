@@ -224,9 +224,6 @@ opmcli --list --patterns $(cat all_indices_patterns.txt)
 | `test1-*`         | 67                 | 604               | 4.05 tb        | 2.03 tb    | `*******`                | `*******`         |             |
 | `test2-*`         | 76                 | 216               | 1.45 tb        | 742.38 gb  | `*******`                | `*******`         |             |
 | `test3*`          | 9                  | 18                | 186.49 mb      | 93.35 mb   | `*******`                | 🔍 **NOT ENABLED** |             |
-|                   |                    |                   |                |            |                          |                   |             |
-
-
 
 
 
