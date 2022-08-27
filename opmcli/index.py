@@ -1,4 +1,5 @@
 from http import client
+from tkinter.tix import INTEGER
 import opensearchpy
 import time
 from tabulate import tabulate
@@ -15,6 +16,7 @@ from rich.rule import Rule
 from rich import print as rich_print
 from rich.markdown import Markdown
 import pyperclip
+from operator import itemgetter
 
 from opmcli.opensearch_api import Opensearch_Python
 from opmcli.attributes import Attributes
@@ -967,7 +969,7 @@ class Index_Monitoring(Opensearch_Python):
             exit(0)
 
 
-    def print_indices_patterns_table(self, patterns_list, template_version=2):
+    def print_indices_patterns_table(self, patterns_list, template_version=2, sort_by=None):
         """
         Print a strutured table with each index pattern information
         INPUT:
@@ -1007,7 +1009,7 @@ class Index_Monitoring(Opensearch_Python):
                     total=len(patterns_list),
                     )
 
-            table = [['**Index pattern**', "**Indices number**", "**shards number**", '**size total**', "**size P**", f"**ndex Templates** (v{template_version})", "**ISM Policy**", "**Comment**"]]
+            table = []
 
             with Live(self.progress_shards_list, auto_refresh=True, screen=False):
                 cnt = 1
@@ -1022,22 +1024,24 @@ class Index_Monitoring(Opensearch_Python):
                         shards_number_total = pattern_stats.get("_shards").get("total")
                         if shards_number_total != 0:
                             indices_number = len(pattern_stats.get("indices"))
-                            size_total = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('total').get('store').get('size_in_bytes'))
-                            size_p = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('primaries').get('store').get('size_in_bytes'))
+                            size_total = pattern_stats.get('_all').get('total').get('store').get('size_in_bytes')
+                            # size_total = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('total').get('store').get('size_in_bytes'))
+                            size_p = pattern_stats.get('_all').get('primaries').get('store').get('size_in_bytes')
+                            # size_p = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('primaries').get('store').get('size_in_bytes'))
                             comment = ""
                         else:
-                            indices_number = ""
-                            shards_number_total =""
-                            size_total = ""
-                            size_p = ""
+                            indices_number = 0
+                            shards_number_total = 0
+                            size_total = 0
+                            size_p = 0
                             comment = "❗ **INDEX NOT FOUND**"
                             
                     except KeyError:
                         pattern_stats = {}
-                        indices_number = ""
-                        shards_number_total =""
-                        size_total = ""
-                        size_p = ""
+                        indices_number = "0"
+                        shards_number_total ="0"
+                        size_total = "0"
+                        size_p = "0"
                         comment = "❗ **INDEX NOT FOUND**"
 
                     matching_templates = find_index_template(pattern)
@@ -1056,13 +1060,13 @@ class Index_Monitoring(Opensearch_Python):
                         # Index pattern
                         f"`{pattern}`",
                         # Indices number
-                        indices_number,
+                        int(indices_number),
                         # shards number total
-                        shards_number_total,
+                        int(shards_number_total),
                         # size total
-                        size_total,
+                        int(size_total),
                         # size of Primary shards
-                        size_p,
+                        int(size_p),
                         # Matching index templates
                         index_templates,
                         # ISM policy
@@ -1072,11 +1076,35 @@ class Index_Monitoring(Opensearch_Python):
 
                     table.append(row)
                     cnt+=1
+
+            # Sort the table
+            print(sort_by)
+            if sort_by is not None:
+                if sort_by == 'size':
+                    table = sorted(table, key=itemgetter(3), reverse=True)
+                elif sort_by == 'indices':
+                    table = sorted(table, key=itemgetter(1), reverse=True)
+                elif sort_by == 'shards':
+                    table = sorted(table, key=itemgetter(2), reverse=True)
+
+            # convert sizes from bytes to gb, tb, etc.
+            for i in range(len(table)):
+                if isinstance(table[i][3], int):
+                    table[i][3] = helper_.bytes_to_kb_mb_gb(table[i][3])
+                if isinstance(table[i][4], int):
+                    table[i][4] = helper_.bytes_to_kb_mb_gb(table[i][4])
+
+            # Add the table header at the begining of the list
+            table.insert(0, ['**Index pattern**', "**Indices number**", "**Shards number**", '**Size total**', "**Size P**", f"**Index Templates** (v{template_version})", "**ISM Policy**", "**Comment**"])
             out = tabulate(table, headers='firstrow', tablefmt='github')
             # rich_print(Markdown(out))
-            print(f"\n{out}\n")
+            table_file = "patterns-table.md"
+            with open(table_file, 'w') as f:
+                f.write(out)
+            # print(f"\n{out}\n")
+            rich_print(f"\n- Table is saved in '{table_file}'")
             pyperclip.copy(out)
-            rich_print("\n[green]INFO -- Table is copied to clipboard")
+            rich_print("[green]- Table is copied to clipboard 📋")
         except KeyboardInterrupt:
             print()
             rich_print("[green]OK!")
