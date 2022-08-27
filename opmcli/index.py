@@ -1,3 +1,5 @@
+from http import client
+from tkinter.tix import INTEGER
 import opensearchpy
 import time
 from tabulate import tabulate
@@ -12,20 +14,34 @@ from rich.layout import Layout
 from rich.console import Console, Group
 from rich.rule import Rule
 from rich import print as rich_print
+from rich.markdown import Markdown
+import pyperclip
+from operator import itemgetter
 
 from opmcli.opensearch_api import Opensearch_Python
 from opmcli.attributes import Attributes
 from opmcli.helper import Helper
 helper_ = Helper()
 
+class Bcolors:
+    def __init__(self):
+        self.HEADER = '\033[95m'
+        self.OKBLUE = '\033[94m'
+        self.OKGREEN = '\033[92m'
+        self.WARNING = '\033[93m'
+        self.FAIL = '\033[91m'
+        self.ENDC = '\033[0m'
+        self.BOLD = '\033[1m'
+        self.UNDERLINE = '\033[4m'
+        self.GRAY = "\033[1;30;40m"
 
 class Index_Monitoring(Opensearch_Python):
     def __init__(self):
         super().__init__()
 
         self.total_or_primaries = 'total'
+        self.bcolors = Bcolors()
 
-        
 
     def index_monitor(self, index_pattern, primaries=True):
         """
@@ -951,6 +967,153 @@ class Index_Monitoring(Opensearch_Python):
             raise SystemExit(f"ERROR -- connection failed with openSearch\n> {e}")
         except (KeyboardInterrupt):
             exit(0)
+
+
+    def print_indices_patterns_table(self, patterns_list, template_version=2, sort_by=None):
+        """
+        Print a strutured table with each index pattern information
+        INPUT:
+            - Indices_patterns (list)
+        """
+        try:
+            print("Getting Index templates ...", end="\r")
+            index_templates_list_ = self.get_index_template("*",  template_version=template_version)
+            
+            def find_index_template(pattern, index_templates_list=index_templates_list_):
+                found = []
+                if template_version == 2:
+                    index_templates_list = index_templates_list.get('index_templates')
+                    for template in index_templates_list:
+                        if pattern in template.get("index_template").get("index_patterns"):
+                            found.append(template.get("name"))
+
+                if template_version == 1:
+                    for template_name, value in index_templates_list.items():
+                        if pattern in value.get("index_patterns"):
+                            found.append(template_name)
+                return found
+
+
+            self.progress_shards_list = Progress(
+                SpinnerColumn(),
+                TimeElapsedColumn(),
+                TimeRemainingColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(bar_width=30), 
+                TaskProgressColumn(),
+                TextColumn("{task.fields[status]}"),
+            )
+            self.task_percentage  = self.progress_shards_list.add_task(
+                    description=f"[b]Discovering Patterns ",
+                    status="...",
+                    total=len(patterns_list),
+                    )
+
+            table = []
+
+            with Live(self.progress_shards_list, auto_refresh=True, screen=False):
+                cnt = 1
+                for pattern in patterns_list:
+                    # Add * at the end of the patter is doesn't exist
+                    if pattern[-1] != '*':
+                        pattern = pattern + "*"
+
+                    self.progress_shards_list.update(task_id=self.task_percentage, status=f" [ [yellow]{pattern}[/yellow] ]", completed=cnt)                            
+                    try:
+                        pattern_stats = self.get_index_stats(pattern, exit_on_fail=False)
+                        shards_number_total = pattern_stats.get("_shards").get("total")
+                        if shards_number_total != 0:
+                            indices_number = len(pattern_stats.get("indices"))
+                            size_total = pattern_stats.get('_all').get('total').get('store').get('size_in_bytes')
+                            # size_total = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('total').get('store').get('size_in_bytes'))
+                            size_p = pattern_stats.get('_all').get('primaries').get('store').get('size_in_bytes')
+                            # size_p = helper_.bytes_to_kb_mb_gb(pattern_stats.get('_all').get('primaries').get('store').get('size_in_bytes'))
+                            comment = ""
+                        else:
+                            indices_number = 0
+                            shards_number_total = 0
+                            size_total = 0
+                            size_p = 0
+                            comment = "❗ **INDEX NOT FOUND**"
+                            
+                    except KeyError:
+                        pattern_stats = {}
+                        indices_number = "0"
+                        shards_number_total ="0"
+                        size_total = "0"
+                        size_p = "0"
+                        comment = "❗ **INDEX NOT FOUND**"
+
+                    matching_templates = find_index_template(pattern)
+                    if len(matching_templates) > 0:
+                        index_templates = f"`{''.join(matching_templates)}`"
+                    else:
+                        index_templates = " "
+
+                    ism_policy = "🔍 **NOT ENABLED**"
+                    if self.get_ism_policy(pattern) is None:
+                        ism_policy = "❗ **NOT FOUND**"
+                    elif self.get_ism_policy(pattern):
+                        ism_policy = f"`{self.get_ism_policy(pattern).get('policy_id')}`"
+
+                    row = [
+                        # Index pattern
+                        f"`{pattern}`",
+                        # Indices number
+                        int(indices_number),
+                        # shards number total
+                        int(shards_number_total),
+                        # size total
+                        int(size_total),
+                        # size of Primary shards
+                        int(size_p),
+                        # Matching index templates
+                        index_templates,
+                        # ISM policy
+                        ism_policy,
+                        comment
+                    ]
+
+                    table.append(row)
+                    cnt+=1
+
+            # Sort the table
+            print(sort_by)
+            if sort_by is not None:
+                if sort_by == 'size':
+                    table = sorted(table, key=itemgetter(3), reverse=True)
+                elif sort_by == 'indices':
+                    table = sorted(table, key=itemgetter(1), reverse=True)
+                elif sort_by == 'shards':
+                    table = sorted(table, key=itemgetter(2), reverse=True)
+
+            # convert sizes from bytes to gb, tb, etc.
+            for i in range(len(table)):
+                if isinstance(table[i][3], int):
+                    table[i][3] = helper_.bytes_to_kb_mb_gb(table[i][3])
+                if isinstance(table[i][4], int):
+                    table[i][4] = helper_.bytes_to_kb_mb_gb(table[i][4])
+
+            # Add the table header at the begining of the list
+            table.insert(0, ['**Index pattern**', "**Indices number**", "**Shards number**", '**Size total**', "**Size P**", f"**Index Templates** (v{template_version})", "**ISM Policy**", "**Comment**"])
+            out = tabulate(table, headers='firstrow', tablefmt='github')
+            # rich_print(Markdown(out))
+            table_file = "patterns-table.md"
+            with open(table_file, 'w') as f:
+                f.write(out)
+            # print(f"\n{out}\n")
+            rich_print(f"\n- Table is saved in '{table_file}'")
+            pyperclip.copy(out)
+            rich_print("[green]- Table is copied to clipboard 📋")
+        except KeyboardInterrupt:
+            print()
+            rich_print("[green]OK!")
+            exit(0)
+        except (opensearchpy.exceptions.AuthorizationException,
+                opensearchpy.exceptions.ConnectionTimeout) as e:
+            raise SystemExit(f"ERROR -- (print_indices_patterns_table) connection failed with openSearch\n> {e}")
+
+        
 
 
 

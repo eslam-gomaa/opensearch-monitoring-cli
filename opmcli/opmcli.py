@@ -25,6 +25,9 @@ class Cli():
         self.nodes = False
         self.watch = False
         self.display_shards = False
+        self.indices_patterns = None
+        self.template_version = 2
+        self.sort_by = None
 
         Attributes.monitoring_interval_seconds = 30
 
@@ -56,6 +59,10 @@ class Cli():
 
         if  (self.top) and (self.index):
             index_monitoring.index_monitor(index_pattern=self.index, primaries=self.primaries)
+            exit(0)
+
+        if (self.list and self.indices_patterns):
+            index_monitoring.print_indices_patterns_table(patterns_list=self.indices_patterns, template_version=self.template_version, sort_by=self.sort_by)
             exit(0)
 
         # Print help if no args are provided.
@@ -114,7 +121,9 @@ class Cli():
         parser.add_argument('-w', '--watch', action='store_true', help='show live results')
         parser.add_argument('-p', '--prim', action='store_true', help='Monitor only Primary shards (for --top --index)')
         parser.add_argument('-d', '--display-shards', action='store_true', help='display shards allocation on Nodes (for --list --index)')
-
+        parser.add_argument('-P', '--patterns', nargs='+', help='display Indices patterns information, takes a List of patterns')
+        parser.add_argument('-tv', '--template-version', type=int, required=False, choices=[1,2],help='specify Index template version to discover (for --patterns), default: 2')
+        parser.add_argument('-s', '--sort-by', type=str, required=False, choices=['size','indices', 'shards'],help='Sort the table items, (for --patterns)')
 
 
         results = parser.parse_args()
@@ -150,8 +159,15 @@ class Cli():
         if results.display_shards:
             self.display_shards = results.display_shards
 
+        if results.patterns:
+            self.indices_patterns = results.patterns
 
-    
+        if results.template_version:
+            self.template_version = results.template_version
+
+        if results.sort_by:
+            self.sort_by = results.sort_by
+
 cli = Cli()
 
 def run():
