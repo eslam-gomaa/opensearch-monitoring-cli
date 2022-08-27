@@ -200,6 +200,23 @@ CLI options for `--display-shards`
 <br>
 <br>
 
+**Examples**
+
+```bash
+opmcli --list --patterns test-* test2-* --sort-by size
+```
+
+```bash
+cat all_indices_patterns.txt
+#test-*
+#test2-*
+
+opmcli --list --patterns $(cat all_indices_patterns.txt)
+```
+
+
+<br>
+
 **Example output**
 
 | **Index pattern** | **Indices number** | **Shards number** | **Size total** | **Size P** | **Index Templates** (v2) | **ISM Policy**    | **Comment** |
