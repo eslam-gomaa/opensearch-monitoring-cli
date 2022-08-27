@@ -10,7 +10,7 @@ The following functions are supported:
 - [List Indices](#list-indices)
 - [live monitoring for Indices](#top-index)
 - [show shards allocation over the nodes](#shards-allocation) (for a giving Index pattern)
-- [generate **Markdown table** for indices patters](#indices-patterns) 🎉 **NEW**
+- [generate **Markdown table** for indices patterns](#indices-patterns) 🎉 **NEW**
 
 
 # Installation
@@ -183,7 +183,7 @@ opmcli --list --index INDEX_PATTERN --display-shards
 
 <br>
 
-### Generate **Markdown table** for indices patters
+### Generate **Markdown table** for indices patterns
 <a id=indices-patterns></a>
 
 Generates a markdown table with helpful information for each index pattern (compatible with [Jira confluence](https://www.atlassian.com/software/confluence))
