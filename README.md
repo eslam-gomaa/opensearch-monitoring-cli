@@ -189,7 +189,7 @@ opmcli --list --index INDEX_PATTERN --display-shards
 Generates a markdown table with helpful information for each index pattern (compatible with [Jira confluence](https://www.atlassian.com/software/confluence))
 
 
-CLI options for `--display-shards`
+CLI options for `--patterns`
 
 | argument             | description                                                  | options                     | default |
 | -------------------- | ------------------------------------------------------------ | --------------------------- | ------- |
